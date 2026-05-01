@@ -1,222 +1,324 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GCX Change Platform</title>
+import React, { useState } from "react";
+import {
+  ChartBarIcon,
+  ClipboardDocumentListIcon,
+  Cog6ToothIcon,
+  HomeIcon,
+  UserGroupIcon,
+  SparklesIcon,
+} from "@heroicons/react/24/outline";
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
+const roles = ["Leader", "Manager", "Change Lead"];
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+export default function App() {
+  const [section, setSection] = useState("Dashboard");
+  const [role, setRole] = useState("Leader");
+  const [intakeStep, setIntakeStep] = useState(1);
 
-<style>
-body { font-family: 'Poppins', sans-serif; }
-</style>
-</head>
+  const navItems = [
+    { name: "Dashboard", icon: HomeIcon },
+    { name: "My Changes", icon: ClipboardDocumentListIcon },
+    { name: "Toolkit", icon: Cog6ToothIcon },
+    { name: "Manager Hub", icon: UserGroupIcon },
+    { name: "Analytics", icon: ChartBarIcon },
+  ];
 
-<body class="bg-slate-50">
+  const Card = ({ title, children }) => (
+    <div className="bg-white shadow-sm rounded-xl p-4 border border-gray-200 hover:shadow-md transition-all duration-200">
+      <h3 className="font-semibold text-gray-700 mb-2">{title}</h3>
+      {children}
+    </div>
+  );
 
-<div class="flex h-screen">
+  const Sidebar = () => (
+    <div className="w-64 h-screen bg-gray-50 border-r border-gray-200 flex flex-col">
+      <div className="p-6 text-2xl font-bold text-blue-700 border-b border-gray-200">
+        GCX Portal
+      </div>
+      <nav className="flex-1 p-4 space-y-2">
+        {navItems.map((item) => (
+          <button
+            key={item.name}
+            onClick={() => setSection(item.name)}
+            className={`flex items-center w-full text-left rounded-lg px-3 py-2 text-gray-700 hover:bg-blue-100 transition ${
+              section === item.name ? "bg-blue-200 font-semibold" : ""
+            }`}
+          >
+            <item.icon className="h-5 w-5 mr-2 text-gray-600" />
+            {item.name}
+          </button>
+        ))}
+      </nav>
+      <div className="p-4 border-t border-gray-200">
+        <label className="block text-xs text-gray-600 mb-1">Role View</label>
+        <select
+          className="w-full border border-gray-300 rounded-md text-sm p-2"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+        >
+          {roles.map((r) => (
+            <option key={r}>{r}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
 
-<!-- SIDEBAR -->
-<aside class="w-72 bg-white border-r p-6 flex flex-col">
-<h2 class="font-black text-xl mb-10">GCX Change</h2>
+  // --- Sections --- //
+  const Dashboard = () => (
+    <div className="p-6 space-y-6">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+        {role} Dashboard
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card title="Active Changes">
+          <ul className="space-y-1 text-sm text-gray-600">
+            <li>• CX Tool Migration — 🟢 On Track</li>
+            <li>• Policy Refresh v2 — 🟠 At Risk</li>
+            <li>• AI Routing Pilot — 🔴 Delayed</li>
+          </ul>
+        </Card>
+        <Card title="Adoption Snapshot">
+          <p className="text-3xl font-bold text-blue-600">78%</p>
+          <p className="text-sm text-gray-500">Overall adoption rate</p>
+        </Card>
+        <Card title="Quick Actions">
+          <div className="space-y-2">
+            <button
+              onClick={() => setSection("My Changes")}
+              className="w-full bg-blue-600 text-white rounded-md py-2 hover:bg-blue-700"
+            >
+              Start a New Change
+            </button>
+            <button className="w-full bg-gray-200 rounded-md py-2 hover:bg-gray-300">
+              View My Initiatives
+            </button>
+            <button
+              onClick={() => setSection("Toolkit")}
+              className="w-full bg-gray-200 rounded-md py-2 hover:bg-gray-300"
+            >
+              Access Toolkit
+            </button>
+          </div>
+        </Card>
+      </div>
+      <Card title="Change Saturation Heatmap">
+        <div className="grid grid-cols-5 gap-1 text-xs text-center">
+          {["Ops", "Support", "Sales", "Tech", "Policy"].map((d, i) => (
+            <div
+              key={d}
+              className={`p-3 rounded text-white ${
+                i % 2 === 0 ? "bg-blue-400" : "bg-blue-600"
+              }`}
+            >
+              {d}
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
 
-<button onclick="showPage('dashboard')" class="mb-3 text-left">Dashboard</button>
-<button onclick="showPage('intake')" class="mb-3 text-left">Change Intake</button>
-<button onclick="showPage('portfolio')" class="mb-3 text-left">Portfolio</button>
+  const ChangeIntake = () => {
+    const steps = [
+      "Overview",
+      "Audiences",
+      "Change Type",
+      "Timeline",
+      "Behaviors",
+    ];
+    return (
+      <div className="p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-800">
+            New Change Intake
+          </h2>
+          <p className="text-sm text-gray-500">
+            Step {intakeStep} of {steps.length}: {steps[intakeStep - 1]}
+          </p>
+        </div>
+        <div className="w-full bg-gray-200 h-2 rounded-full mt-2 mb-6">
+          <div
+            className="bg-blue-600 h-2 rounded-full transition-all"
+            style={{ width: `${(intakeStep / steps.length) * 100}%` }}
+          />
+        </div>
+        <div className="bg-white border p-4 rounded-md mb-4 text-gray-700 min-h-[200px]">
+          {intakeStep === 1 && <p>Enter a short description of your change.</p>}
+          {intakeStep === 2 && <p>Select all impacted audiences.</p>}
+          {intakeStep === 3 && <p>Choose the type: Tech / Process / Policy.</p>}
+          {intakeStep === 4 && <p>Provide the key timeline milestones.</p>}
+          {intakeStep === 5 && (
+            <p>Describe required behavior changes for success.</p>
+          )}
+        </div>
+        <div className="flex justify-end gap-2">
+          <button
+            disabled={intakeStep === 1}
+            className={`px-3 py-2 rounded-md ${
+              intakeStep === 1
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-gray-300 hover:bg-gray-400"
+            }`}
+            onClick={() => setIntakeStep((s) => Math.max(s - 1, 1))}
+          >
+            Back
+          </button>
+          {intakeStep < steps.length ? (
+            <button
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              onClick={() => setIntakeStep((s) => Math.min(s + 1, steps.length))}
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              onClick={() => alert("Change Summary Created!")}
+            >
+              Finish
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
 
-</aside>
+  const Toolkit = () => (
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-800">
+          Toolkit Library
+        </h2>
+        <input
+          className="border rounded-md p-2 text-sm w-64"
+          placeholder="Search templates..."
+        />
+      </div>
+      <div className="grid md:grid-cols-2 gap-4">
+        {[
+          { title: "Impact Assessment Template", category: "Assessment" },
+          { title: "Comms Template", category: "Communication" },
+          { title: "Manager Pack", category: "Enablement" },
+          { title: "Adoption Metrics", category: "Measurement" },
+        ].map((t) => (
+          <Card key={t.title} title={t.title}>
+            <p className="text-sm text-gray-500 mb-2">{t.category}</p>
+            <p className="text-sm text-gray-600 mb-3">
+              Use this template to guide change readiness analysis.
+            </p>
+            <button className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700">
+              Use Template
+            </button>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
 
-<!-- MAIN -->
-<div class="flex-1 p-10 overflow-y-auto">
+  const ManagerHub = () => (
+    <div className="p-6 space-y-4">
+      <h2 className="text-xl font-semibold text-gray-800">
+        Manager Change Hub
+      </h2>
+      <Card title="Your Team Changes">
+        <ul className="text-sm text-gray-600 space-y-1">
+          <li>• Chatbot Enhancement</li>
+          <li>• CX Dashboard Rollout</li>
+          <li>• Escalation Policy Update</li>
+        </ul>
+      </Card>
+      <Card title="Manager Checklist">
+        <ul className="text-sm text-gray-600 space-y-2">
+          <li>[ ] Brief your team</li>
+          <li>[ ] Run team huddle</li>
+          <li>[ ] Observe behavior changes</li>
+        </ul>
+      </Card>
+      <Card title="Progress Tracker">
+        <div className="bg-gray-200 h-3 rounded-full mb-2">
+          <div className="bg-blue-600 h-3 rounded-full w-3/4"></div>
+        </div>
+        <p className="text-sm text-gray-500">75% complete</p>
+      </Card>
+    </div>
+  );
 
-<!-- DASHBOARD -->
-<div id="dashboard">
-<h1 class="text-4xl font-black mb-6">Command Center</h1>
+  const Analytics = () => (
+    <div className="p-6 space-y-4">
+      <h2 className="text-xl font-semibold text-gray-800">
+        Adoption Dashboard
+      </h2>
+      <Card title="Key Metrics">
+        <div className="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <p className="text-3xl text-blue-600 font-bold">78%</p>
+            <p className="text-sm text-gray-500">Adoption Rate</p>
+          </div>
+          <div>
+            <p className="text-3xl text-blue-600 font-bold">62%</p>
+            <p className="text-sm text-gray-500">Readiness Index</p>
+          </div>
+          <div>
+            <p className="text-3xl text-blue-600 font-bold">84%</p>
+            <p className="text-sm text-gray-500">Behavior Compliance</p>
+          </div>
+        </div>
+      </Card>
+      <Card title="AI Assistant">
+        <div className="bg-gray-50 border rounded-md p-4">
+          <p className="text-sm text-gray-500 mb-2">
+            Example Prompt: “Generate comms for this change.”
+          </p>
+          <div className="bg-white border rounded-md p-3 text-sm text-gray-700">
+            <p>
+              ✨ *AI Output:* “Team, upcoming CX Portal updates will streamline
+              workflows ...”
+            </p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
 
-<div class="grid grid-cols-4 gap-6">
-<div class="bg-white p-6 rounded-xl shadow">
-<p class="text-xs">Portfolio</p>
-<h2 class="text-3xl font-bold">24</h2>
-</div>
+  const renderSection = () => {
+    switch (section) {
+      case "Dashboard":
+        return <Dashboard />;
+      case "My Changes":
+        return <ChangeIntake />;
+      case "Toolkit":
+        return <Toolkit />;
+      case "Manager Hub":
+        return <ManagerHub />;
+      case "Analytics":
+        return <Analytics />;
+      default:
+        return <Dashboard />;
+    }
+  };
 
-<div class="bg-white p-6 rounded-xl shadow">
-<p class="text-xs">Adoption</p>
-<h2 class="text-3xl font-bold text-green-600">92%</h2>
-</div>
-
-<div class="bg-white p-6 rounded-xl shadow">
-<p class="text-xs">Risks</p>
-<h2 class="text-3xl font-bold text-red-500">3</h2>
-</div>
-
-<div class="bg-white p-6 rounded-xl shadow">
-<p class="text-xs">New Changes</p>
-<h2 class="text-3xl font-bold">7</h2>
-</div>
-</div>
-
-</div>
-
-<!-- INTAKE -->
-<div id="intake" class="hidden">
-
-<h1 class="text-4xl font-black mb-8">Strategic Change Designer</h1>
-
-<!-- STEP NAV -->
-<div class="flex gap-3 mb-8">
-<div id="step1" class="step">1</div>
-<div id="step2" class="step">2</div>
-<div id="step3" class="step">3</div>
-<div id="step4" class="step">4</div>
-</div>
-
-<!-- STEP 1 -->
-<div id="step-content-1">
-<input id="title" placeholder="Initiative Name" class="w-full p-3 border mb-4">
-<textarea id="objective" placeholder="Objective" class="w-full p-3 border"></textarea>
-</div>
-
-<!-- STEP 2 -->
-<div id="step-content-2" class="hidden">
-<label>Audience Size</label>
-<input type="range" id="audience" min="10" max="1000" value="150" class="w-full">
-</div>
-
-<!-- STEP 3 -->
-<div id="step-content-3" class="hidden">
-<textarea id="before" placeholder="Current behavior" class="w-full p-3 border mb-4"></textarea>
-<textarea id="after" placeholder="Desired behavior" class="w-full p-3 border"></textarea>
-</div>
-
-<!-- STEP 4 -->
-<div id="step-content-4" class="hidden">
-<p>Select Metrics:</p>
-
-<button onclick="toggleMetric('Usage')" class="metric">Usage</button>
-<button onclick="toggleMetric('Compliance')" class="metric">Compliance</button>
-<button onclick="toggleMetric('CSAT')" class="metric">CSAT</button>
-</div>
-
-<!-- NAV -->
-<div class="mt-6 flex justify-between">
-<button onclick="prevStep()">Back</button>
-<button onclick="nextStep()">Next</button>
-</div>
-
-<!-- SUMMARY -->
-<div id="summary" class="mt-8"></div>
-
-</div>
-
-<!-- PORTFOLIO -->
-<div id="portfolio" class="hidden">
-<h1 class="text-4xl font-black">Portfolio</h1>
-
-<div class="mt-6 space-y-4">
-
-<div class="bg-white p-6 rounded-xl shadow">
-Project Phoenix – 65% readiness
-</div>
-
-<div class="bg-white p-6 rounded-xl shadow">
-AI Ticketing – 88% readiness
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-<style>
-.step {
-width:40px;
-height:40px;
-border-radius:10px;
-background:#e5e7eb;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:bold;
+  return (
+    <div className="flex font-sans bg-gray-100 min-h-screen">
+      <Sidebar />
+      <main className="flex-1 overflow-y-auto">{renderSection()}</main>
+      {/* Optional AI Panel */}
+      <aside className="w-80 border-l border-gray-200 bg-white p-4 flex flex-col">
+        <div className="flex items-center gap-2 mb-3">
+          <SparklesIcon className="h-5 w-5 text-purple-600" />
+          <span className="font-semibold">AI Assistant</span>
+        </div>
+        <div className="flex-1 bg-gray-50 border rounded-md p-3 overflow-auto text-sm text-gray-700">
+          <p><b>User:</b> Suggest rollout comms</p>
+          <p className="mt-2 text-blue-700">
+            <b>AI:</b> Here's a comms draft emphasizing benefits and key actions...
+          </p>
+        </div>
+        <input
+          placeholder="Ask GCX AI..."
+          className="mt-3 border border-gray-300 rounded-md p-2 text-sm"
+        />
+      </aside>
+    </div>
+  );
 }
-.metric {
-border:1px solid #ddd;
-padding:8px 12px;
-margin:5px;
-cursor:pointer;
-}
-.metric.active {
-background:#4f46e5;
-color:white;
-}
-</style>
-
-<script>
-
-let step = 1
-let metrics = []
-
-function showPage(page){
-document.getElementById('dashboard').classList.add('hidden')
-document.getElementById('intake').classList.add('hidden')
-document.getElementById('portfolio').classList.add('hidden')
-
-document.getElementById(page).classList.remove('hidden')
-}
-
-function nextStep(){
-if(step < 4){
-document.getElementById(`step-content-${step}`).classList.add('hidden')
-step++
-document.getElementById(`step-content-${step}`).classList.remove('hidden')
-}else{
-generateSummary()
-}
-}
-
-function prevStep(){
-if(step > 1){
-document.getElementById(`step-content-${step}`).classList.add('hidden')
-step--
-document.getElementById(`step-content-${step}`).classList.remove('hidden')
-}
-}
-
-function toggleMetric(m){
-if(metrics.includes(m)){
-metrics = metrics.filter(x=>x!==m)
-}else{
-metrics.push(m)
-}
-event.target.classList.toggle('active')
-}
-
-function generateSummary(){
-
-const title = document.getElementById('title').value
-const objective = document.getElementById('objective').value
-const audience = document.getElementById('audience').value
-
-const impact = Math.min(100, Math.floor(audience / 5))
-
-document.getElementById('summary').innerHTML = `
-<div class="bg-black text-white p-8 rounded-2xl mt-6">
-<h2 class="text-2xl font-bold">${title}</h2>
-<p class="mt-2">${objective}</p>
-
-<p class="mt-4">Impact Score: ${impact}</p>
-<p>Metrics: ${metrics.join(', ')}</p>
-</div>
-`
-}
-
-lucide.createIcons()
-
-</script>
-
-</body>
-</html>
