@@ -20,100 +20,195 @@ body { font-family: 'Poppins', sans-serif; }
 <div class="flex h-screen">
 
 <!-- SIDEBAR -->
-<aside class="w-64 bg-white border-r p-6">
-<h2 class="font-black text-xl mb-8">GCX Change</h2>
+<aside class="w-72 bg-white border-r p-6 flex flex-col">
+<h2 class="font-black text-xl mb-10">GCX Change</h2>
 
-<button onclick="show('dashboard')" class="block mb-3">Dashboard</button>
-<button onclick="show('intake')" class="block mb-3">Change Intake</button>
-<button onclick="show('portfolio')" class="block mb-3">Portfolio</button>
+<button onclick="show('dashboard')" class="mb-3 text-left">Dashboard</button>
+<button onclick="show('intake')" class="mb-3 text-left">Change Intake</button>
+<button onclick="show('portfolio')" class="mb-3 text-left">Portfolio</button>
 
+<div class="mt-auto">
+<p class="text-xs text-gray-400">Demo Mode</p>
+</div>
 </aside>
 
 <!-- MAIN -->
-<div class="flex-1 p-10 overflow-y-auto">
+<div class="flex-1 flex flex-col">
+
+<!-- HEADER -->
+<div class="bg-white border-b p-4 flex justify-between items-center">
+
+<div>
+<h1 class="font-black text-lg">GCX Change Platform</h1>
+<p class="text-xs text-gray-500">Enterprise Change Enablement</p>
+</div>
+
+<!-- ROLE SWITCH -->
+<div class="flex gap-2">
+<button onclick="setRole('Leader')" class="role-btn">Leader</button>
+<button onclick="setRole('Manager')" class="role-btn">Manager</button>
+<button onclick="setRole('Change Lead')" class="role-btn active">Change Lead</button>
+</div>
+
+</div>
+
+<!-- CONTENT -->
+<div class="p-8 overflow-y-auto flex-1">
 
 <!-- DASHBOARD -->
 <div id="dashboard">
-<h1 class="text-4xl font-black mb-6">Command Center</h1>
+<h2 class="text-3xl font-black mb-6">Command Center</h2>
 
 <div class="grid grid-cols-4 gap-6">
 
-<div class="bg-white p-6 rounded-xl shadow">
-<p class="text-xs">Portfolio</p>
-<h2 class="text-3xl font-bold">24</h2>
+<div class="card">
+<p>Active Changes</p>
+<h3>24</h3>
 </div>
 
-<div class="bg-white p-6 rounded-xl shadow">
-<p class="text-xs">Adoption</p>
-<h2 class="text-3xl font-bold text-green-600">92%</h2>
+<div class="card">
+<p>Adoption Rate</p>
+<h3 class="text-green-600">92%</h3>
 </div>
 
-<div class="bg-white p-6 rounded-xl shadow">
-<p class="text-xs">Risk</p>
-<h2 class="text-3xl font-bold text-red-500">3</h2>
+<div class="card">
+<p>Risk Areas</p>
+<h3 class="text-red-500">3</h3>
 </div>
 
-<div class="bg-white p-6 rounded-xl shadow">
-<p class="text-xs">New</p>
-<h2 class="text-3xl font-bold">7</h2>
+<div class="card">
+<p>New Requests</p>
+<h3>7</h3>
 </div>
 
 </div>
+
+<div class="mt-10 bg-white p-6 rounded-xl shadow">
+<h3 class="font-bold mb-4">Change Saturation</h3>
+<div class="h-3 bg-gray-200 rounded-full">
+<div class="h-3 bg-red-500 rounded-full w-[80%]"></div>
+</div>
+<p class="text-sm mt-2 text-gray-500">Global Support under high load</p>
+</div>
+
 </div>
 
 <!-- INTAKE -->
 <div id="intake" class="hidden">
 
-<h1 class="text-4xl font-black mb-6">Strategic Change Designer</h1>
+<h2 class="text-3xl font-black mb-6">Strategic Change Designer</h2>
 
-<div class="space-y-4">
+<div class="bg-white p-6 rounded-xl shadow space-y-6">
 
-<input id="title" placeholder="Initiative Name" class="w-full p-3 border rounded">
+<input id="title" placeholder="Initiative Name" class="input">
 
-<textarea id="objective" placeholder="Objective" class="w-full p-3 border rounded"></textarea>
+<textarea id="objective" placeholder="Objective" class="input"></textarea>
 
-<label class="block">Audience Size</label>
-<input type="range" id="audience" min="10" max="1000" value="150" class="w-full">
+<label class="text-sm font-bold">Audience Impact</label>
+<input type="range" id="audience" min="10" max="1000" value="150">
+
+<div>
+<label class="text-sm font-bold">Behavior Change</label>
+<textarea id="before" placeholder="Current behavior" class="input"></textarea>
+<textarea id="after" placeholder="Desired behavior" class="input"></textarea>
+</div>
+
+<button onclick="generate()" class="btn-primary">
+Generate Strategic Summary
+</button>
 
 </div>
 
-<button onclick="generate()" class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded">
-Generate Summary
-</button>
-
-<div id="output" class="mt-6"></div>
+<div id="output" class="mt-8"></div>
 
 </div>
 
 <!-- PORTFOLIO -->
 <div id="portfolio" class="hidden">
-<h1 class="text-4xl font-black mb-6">Portfolio</h1>
+
+<h2 class="text-3xl font-black mb-6">Active Portfolio</h2>
 
 <div class="space-y-4">
 
-<div class="bg-white p-6 rounded-xl shadow">
-Project Phoenix – 65% readiness
+<div class="portfolio-card">
+Project Phoenix – 65%
 </div>
 
-<div class="bg-white p-6 rounded-xl shadow">
-AI Ticketing – 88% readiness
-</div>
-
+<div class="portfolio-card">
+AI Ticketing – 88%
 </div>
 
 </div>
 
 </div>
+
 </div>
+</div>
+</div>
+
+<style>
+
+.card {
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+font-size:28px;
+font-weight:bold;
+}
+
+.input {
+width:100%;
+padding:10px;
+border:1px solid #ddd;
+border-radius:8px;
+margin-top:8px;
+}
+
+.btn-primary {
+background:#4f46e5;
+color:white;
+padding:10px 16px;
+border-radius:8px;
+font-weight:bold;
+}
+
+.portfolio-card {
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+.role-btn {
+padding:6px 12px;
+border-radius:20px;
+background:#eee;
+font-size:12px;
+}
+
+.role-btn.active {
+background:#4f46e5;
+color:white;
+}
+
+</style>
 
 <script>
 
 function show(page){
-document.getElementById('dashboard').classList.add('hidden')
-document.getElementById('intake').classList.add('hidden')
-document.getElementById('portfolio').classList.add('hidden')
-
+['dashboard','intake','portfolio'].forEach(p=>{
+document.getElementById(p).classList.add('hidden')
+})
 document.getElementById(page).classList.remove('hidden')
+}
+
+function setRole(role){
+document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'))
+event.target.classList.add('active')
 }
 
 function generate(){
@@ -124,10 +219,15 @@ const audience = document.getElementById('audience').value
 const impact = Math.min(100, Math.floor(audience/5))
 
 document.getElementById('output').innerHTML = `
-<div class="bg-slate-900 text-white p-6 rounded-xl">
-<h2 class="text-xl font-bold">${title}</h2>
+<div class="bg-black text-white p-8 rounded-xl">
+<h2 class="text-2xl font-bold">${title}</h2>
 <p class="mt-2">${obj}</p>
-<p class="mt-4">Impact Score: ${impact}</p>
+
+<div class="mt-4">
+<p><b>Impact Score:</b> ${impact}</p>
+<p><b>Audience:</b> ${audience}</p>
+</div>
+
 </div>
 `
 }
