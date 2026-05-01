@@ -20,45 +20,145 @@ body { font-family: 'Poppins', sans-serif; }
 <div class="flex h-screen">
 
 <!-- SIDEBAR -->
-<aside class="w-64 bg-white border-r p-6">
-<h2 class="font-bold text-xl mb-6">GCX Change</h2>
+<aside class="w-72 bg-white border-r p-6 flex flex-col">
+<h2 class="font-black text-xl mb-10">GCX Change</h2>
 
-<button onclick="showPage('dashboard')" class="block mb-3">Dashboard</button>
-<button onclick="showPage('intake')" class="block mb-3">Change Intake</button>
-<button onclick="showPage('portfolio')" class="block mb-3">Portfolio</button>
+<button onclick="showPage('dashboard')" class="mb-3 text-left">Dashboard</button>
+<button onclick="showPage('intake')" class="mb-3 text-left">Change Intake</button>
+<button onclick="showPage('portfolio')" class="mb-3 text-left">Portfolio</button>
 
 </aside>
 
 <!-- MAIN -->
-<div class="flex-1 p-8 overflow-y-auto">
+<div class="flex-1 p-10 overflow-y-auto">
 
+<!-- DASHBOARD -->
 <div id="dashboard">
-<h1 class="text-3xl font-bold mb-4">Dashboard</h1>
-<p>Overview of change portfolio</p>
+<h1 class="text-4xl font-black mb-6">Command Center</h1>
+
+<div class="grid grid-cols-4 gap-6">
+<div class="bg-white p-6 rounded-xl shadow">
+<p class="text-xs">Portfolio</p>
+<h2 class="text-3xl font-bold">24</h2>
 </div>
 
+<div class="bg-white p-6 rounded-xl shadow">
+<p class="text-xs">Adoption</p>
+<h2 class="text-3xl font-bold text-green-600">92%</h2>
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow">
+<p class="text-xs">Risks</p>
+<h2 class="text-3xl font-bold text-red-500">3</h2>
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow">
+<p class="text-xs">New Changes</p>
+<h2 class="text-3xl font-bold">7</h2>
+</div>
+</div>
+
+</div>
+
+<!-- INTAKE -->
 <div id="intake" class="hidden">
-<h1 class="text-3xl font-bold mb-6">Strategic Change Designer</h1>
 
-<input id="title" placeholder="Initiative name" class="border p-2 mb-4 w-full">
-<textarea id="objective" placeholder="Objective" class="border p-2 mb-4 w-full"></textarea>
+<h1 class="text-4xl font-black mb-8">Strategic Change Designer</h1>
 
-<button onclick="generateSummary()" class="bg-indigo-600 text-white px-4 py-2 rounded">
-Generate Summary
-</button>
-
-<div id="summary" class="mt-6"></div>
+<!-- STEP NAV -->
+<div class="flex gap-3 mb-8">
+<div id="step1" class="step">1</div>
+<div id="step2" class="step">2</div>
+<div id="step3" class="step">3</div>
+<div id="step4" class="step">4</div>
 </div>
 
+<!-- STEP 1 -->
+<div id="step-content-1">
+<input id="title" placeholder="Initiative Name" class="w-full p-3 border mb-4">
+<textarea id="objective" placeholder="Objective" class="w-full p-3 border"></textarea>
+</div>
+
+<!-- STEP 2 -->
+<div id="step-content-2" class="hidden">
+<label>Audience Size</label>
+<input type="range" id="audience" min="10" max="1000" value="150" class="w-full">
+</div>
+
+<!-- STEP 3 -->
+<div id="step-content-3" class="hidden">
+<textarea id="before" placeholder="Current behavior" class="w-full p-3 border mb-4"></textarea>
+<textarea id="after" placeholder="Desired behavior" class="w-full p-3 border"></textarea>
+</div>
+
+<!-- STEP 4 -->
+<div id="step-content-4" class="hidden">
+<p>Select Metrics:</p>
+
+<button onclick="toggleMetric('Usage')" class="metric">Usage</button>
+<button onclick="toggleMetric('Compliance')" class="metric">Compliance</button>
+<button onclick="toggleMetric('CSAT')" class="metric">CSAT</button>
+</div>
+
+<!-- NAV -->
+<div class="mt-6 flex justify-between">
+<button onclick="prevStep()">Back</button>
+<button onclick="nextStep()">Next</button>
+</div>
+
+<!-- SUMMARY -->
+<div id="summary" class="mt-8"></div>
+
+</div>
+
+<!-- PORTFOLIO -->
 <div id="portfolio" class="hidden">
-<h1 class="text-3xl font-bold mb-4">Portfolio</h1>
-<p>List of changes</p>
+<h1 class="text-4xl font-black">Portfolio</h1>
+
+<div class="mt-6 space-y-4">
+
+<div class="bg-white p-6 rounded-xl shadow">
+Project Phoenix – 65% readiness
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow">
+AI Ticketing – 88% readiness
+</div>
+
+</div>
+
 </div>
 
 </div>
 </div>
+
+<style>
+.step {
+width:40px;
+height:40px;
+border-radius:10px;
+background:#e5e7eb;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+}
+.metric {
+border:1px solid #ddd;
+padding:8px 12px;
+margin:5px;
+cursor:pointer;
+}
+.metric.active {
+background:#4f46e5;
+color:white;
+}
+</style>
 
 <script>
+
+let step = 1
+let metrics = []
 
 function showPage(page){
 document.getElementById('dashboard').classList.add('hidden')
@@ -68,14 +168,48 @@ document.getElementById('portfolio').classList.add('hidden')
 document.getElementById(page).classList.remove('hidden')
 }
 
+function nextStep(){
+if(step < 4){
+document.getElementById(`step-content-${step}`).classList.add('hidden')
+step++
+document.getElementById(`step-content-${step}`).classList.remove('hidden')
+}else{
+generateSummary()
+}
+}
+
+function prevStep(){
+if(step > 1){
+document.getElementById(`step-content-${step}`).classList.add('hidden')
+step--
+document.getElementById(`step-content-${step}`).classList.remove('hidden')
+}
+}
+
+function toggleMetric(m){
+if(metrics.includes(m)){
+metrics = metrics.filter(x=>x!==m)
+}else{
+metrics.push(m)
+}
+event.target.classList.toggle('active')
+}
+
 function generateSummary(){
+
 const title = document.getElementById('title').value
 const objective = document.getElementById('objective').value
+const audience = document.getElementById('audience').value
+
+const impact = Math.min(100, Math.floor(audience / 5))
 
 document.getElementById('summary').innerHTML = `
-<div class="p-4 bg-white shadow rounded mt-4">
-<h2 class="font-bold text-lg">${title}</h2>
-<p>${objective}</p>
+<div class="bg-black text-white p-8 rounded-2xl mt-6">
+<h2 class="text-2xl font-bold">${title}</h2>
+<p class="mt-2">${objective}</p>
+
+<p class="mt-4">Impact Score: ${impact}</p>
+<p>Metrics: ${metrics.join(', ')}</p>
 </div>
 `
 }
