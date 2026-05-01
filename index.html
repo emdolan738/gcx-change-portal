@@ -1,9 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Test</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GCX Change Platform</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+body { font-family: 'Poppins', sans-serif; }
+</style>
 </head>
-<body>
-<h1>It works</h1>
+
+<body class="bg-slate-50">
+
+<div class="flex h-screen">
+
+<!-- SIDEBAR -->
+<aside class="w-64 bg-white border-r p-6">
+<h2 class="font-black text-xl mb-8">GCX Change</h2>
+
+<button onclick="show('dashboard')" class="block mb-3">Dashboard</button>
+<button onclick="show('intake')" class="block mb-3">Change Intake</button>
+<button onclick="show('portfolio')" class="block mb-3">Portfolio</button>
+
+</aside>
+
+<!-- MAIN -->
+<div class="flex-1 p-10 overflow-y-auto">
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+<h1 class="text-4xl font-black mb-6">Command Center</h1>
+
+<div class="grid grid-cols-4 gap-6">
+
+<div class="bg-white p-6 rounded-xl shadow">
+<p class="text-xs">Portfolio</p>
+<h2 class="text-3xl font-bold">24</h2>
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow">
+<p class="text-xs">Adoption</p>
+<h2 class="text-3xl font-bold text-green-600">92%</h2>
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow">
+<p class="text-xs">Risk</p>
+<h2 class="text-3xl font-bold text-red-500">3</h2>
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow">
+<p class="text-xs">New</p>
+<h2 class="text-3xl font-bold">7</h2>
+</div>
+
+</div>
+</div>
+
+<!-- INTAKE -->
+<div id="intake" class="hidden">
+
+<h1 class="text-4xl font-black mb-6">Strategic Change Designer</h1>
+
+<div class="space-y-4">
+
+<input id="title" placeholder="Initiative Name" class="w-full p-3 border rounded">
+
+<textarea id="objective" placeholder="Objective" class="w-full p-3 border rounded"></textarea>
+
+<label class="block">Audience Size</label>
+<input type="range" id="audience" min="10" max="1000" value="150" class="w-full">
+
+</div>
+
+<button onclick="generate()" class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded">
+Generate Summary
+</button>
+
+<div id="output" class="mt-6"></div>
+
+</div>
+
+<!-- PORTFOLIO -->
+<div id="portfolio" class="hidden">
+<h1 class="text-4xl font-black mb-6">Portfolio</h1>
+
+<div class="space-y-4">
+
+<div class="bg-white p-6 rounded-xl shadow">
+Project Phoenix – 65% readiness
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow">
+AI Ticketing – 88% readiness
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+<script>
+
+function show(page){
+document.getElementById('dashboard').classList.add('hidden')
+document.getElementById('intake').classList.add('hidden')
+document.getElementById('portfolio').classList.add('hidden')
+
+document.getElementById(page).classList.remove('hidden')
+}
+
+function generate(){
+const title = document.getElementById('title').value
+const obj = document.getElementById('objective').value
+const audience = document.getElementById('audience').value
+
+const impact = Math.min(100, Math.floor(audience/5))
+
+document.getElementById('output').innerHTML = `
+<div class="bg-slate-900 text-white p-6 rounded-xl">
+<h2 class="text-xl font-bold">${title}</h2>
+<p class="mt-2">${obj}</p>
+<p class="mt-4">Impact Score: ${impact}</p>
+</div>
+`
+}
+
+lucide.createIcons()
+
+</script>
+
 </body>
 </html>
